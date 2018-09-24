@@ -1,8 +1,0 @@
-
-#!/usr/bin/env bash
-COUNTRY_CODE=$(whois $(torsocks curl icanhazip.com) | grep country: | awk '{ print $2 }')
-if [ ! -z "$COUNTRY_CODE" ]; then
-           echo "<span foreground='#15f603'> $COUNTRY_CODE</span>"
-else 
-	echo "<span foreground='#f60303'></span>"
-fi

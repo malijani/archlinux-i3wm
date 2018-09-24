@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-DIFF_SEC=$(($(date +%s)-$(date +%s -d "$(uptime -s)")))
-echo $(($DIFF_SEC/3600)):$(($DIFF_SEC%3600/60))
