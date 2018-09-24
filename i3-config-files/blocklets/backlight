@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+
+dev=/sys/class/backlight/intel_backlight
+
+bri=$(cat $dev/brightness)
+max=$(cat $dev/max_brightness)
+
+backlight_percent=$(echo "$bri * 100 / $max" | bc)
+echo "☼ $backlight_percent %"
+

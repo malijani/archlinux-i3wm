@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+echo "<span>$(date +%H:%M) <sup> $(jdate +%d/%m)</sup></span>"

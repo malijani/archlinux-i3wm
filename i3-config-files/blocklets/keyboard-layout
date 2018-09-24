@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# print the keyboard layout state likes that you want
+
+if [ $(xkblayout-state print %s) = "ir" ] ; then
+    echo "FA"
+    else
+      echo "EN"
+fi
+
+

@@ -1,0 +1,6 @@
+#!/bin/bash
+if [ ! -z "$(mount |grep home)" ]; then
+	echo "root:$(df -k / | tail -1 | tr -s ' ' | cut -d' ' -f5)    home:$(df -k /home | tail -1 | tr -s ' ' | cut -d' ' -f5)"
+else
+	echo "root:$(df -k / | tail -1 | tr -s ' ' | cut -d' ' -f5)"
+fi

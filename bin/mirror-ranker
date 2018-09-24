@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+cd /tmp
+sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+curl -o mirrorlist.all https://www.archlinux.org/mirrorlist/all/
+sudo mv mirrorlist.all /etc/pacman.d/
+sudo sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist.all
+sudo sed -i '/^#/d' /etc/pacman.d/mirrorlist.all 
+sudo su -c  "rankmirrors -n 15  /etc/pacman.d/mirrorlist.all > /etc/pacman.d/mirrorlist" root
+notify-send "mirrors are ready"

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+status=0
+
+nc -zw 2 ddg.gg 80
+ret="$?"
+
+if [ "$ret" = 0 -a "$status" = 0 ] ;then
+    echo '<span foreground="#3498db"></span>'  
+    status=1
+    else 
+        echo '<span foreground="#FF7080"></span>'
+        status=0
+fi
+
+
+

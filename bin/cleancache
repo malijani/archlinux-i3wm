@@ -1,0 +1,3 @@
+#!/bin/bash
+su -c "echo 3 > /proc/sys/vm/drop_caches && swapoff -a && swapon -a " &&  notify-send 'cache is cleaned sir.'
+
