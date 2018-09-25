@@ -1,0 +1,241 @@
+#!/usr/bin/env bash
+
+mediaPlayer=mpv
+downloadManager='aria2c'
+downloadManagerArguments="-c -m 99 -x 8 -k 2M --always-resume"
+downloadDirectory=$HOME/OnlineVideos
+shellWrapper="torsocks"
+#shellWrapper="torsocks -P 9150"
+
+function usage {
+  cat <<EOF
+ 
+  Usage: ${0##*/} video-downloader [options] "URL"
+  
+  Options:
+    -a : Let the script know you're running vpn on your system and it doesn't need to download videos with tor 
+    -p : Download and play videos parallel
+    -i : Input a file contains list of video links
+    -d : Download videos in a speciall directory
+    -h : Print this help message
+   
+  Example:  video-downloader -a -p "https://example.com/blah_blah"
+            video-downloader -a -i $HOME/links.txt
+            video-downloader -a "https://example.com/post-title"
+            video-downloader -p "http://forexample.com/video-name"
+            video-downloader -ap -i $HOME/fileContainLinks.txt -d $HOME/path/to/download "https://example.com/sub-page/video"
+
+ * The videos will be downloaded in default path (if you don't set -d argument) : $downloadDirectory
+ * Player = $mediaPlayer
+ * Shell wrapper = $shellWrapper
+EOF
+}
+
+function checkDependency {
+    case $1 in 
+    packages)
+        shellWrapperCommand=$(echo $shellWrapper | awk '{ print $1 }')
+        dependencies=(youtube-dl tor $shellWrapperCommand $downloadManager $mediaPlayer)
+        for dependency in ${dependencies[@]}; do
+             [ ! -x "$(command -v $dependency)" ] && echo "Please install $dependency" && exit
+        done
+    ;;
+    dir)
+        [[ ! -e $downloadDirectory ]] && mkdir -p $downloadDirectory 
+        cd $downloadDirectory && pwd
+    ;;
+    esac
+}
+
+function checkSystemStatus {
+    case $1 in 
+    "torStatus")
+        [[ ! $(systemctl status tor.service | grep " active" ) ]] && echo "Please check your tor service!(systemctl status tor.service OR journalctl -xfu tor)"
+    ;;
+    esac
+}
+
+
+function downloaderCommand {
+videoLink="$2"
+case $1 in 
+    "tor+player")
+        videoName=$($shellWrapper youtube-dl --get-filename "$videoLink")
+        $shellWrapper youtube-dl --playlist-start 1 -i -R 99 --restrict-filenames -c -w "$videoLink" -o - | tee -a "$videoName" | $mediaPlayer -
+    ;;
+
+    "vpn+player")
+        videoName=$(youtube-dl --get-filename "$videoLink")
+        youtube-dl --playlist-start 1 -i -R 99 --restrict-filenames -c -w "$videoLink" -o - | tee -a "$videoName" | $mediaPlayer -
+    ;;
+
+    "vpn+inputFile")
+        [[ ! -e  "$fileAddress" ]] && echo "The given file that contain links does not exist!" && exit
+        for link in $(cat "$fileAddress"); do
+            youtube-dl --playlist-start 1 -o  "%(title)s.%(ext)s"  --external-downloader "$downloadManager" --external-downloader-args "$downloadManagerArguments" "$link"
+        done
+    ;;
+    
+    "tor+inputFile")
+        [[ ! -e  "$fileAddress" ]] && echo "The given file that contain links does not exist!" && exit
+        for link in $(cat "$fileAddress"); do
+           $shellWrapper youtube-dl --playlist-start 1 -o  "%(title)s.%(ext)s"  --external-downloader "$downloadManager" --external-downloader-args "$downloadManagerArguments" "$link"
+        done
+    ;;
+
+    "tor+inputFile+player")
+        [[ ! -e  "$fileAddress" ]] && echo "The given file that contain links does not exist!" && exit
+        for link in $(cat "$fileAddress"); do
+            videoName=$(youtube-dl --get-filename "$link")
+            $shellWrapper youtube-dl --playlist-start 1 -i -R 99 --restrict-filenames -c -w "$link" -o - | tee -a "$videoName" | $mediaPlayer -
+        done
+    ;;
+    
+    "vpn+inputFile+player")
+        [[ ! -e  "$fileAddress" ]] && echo "The given file that contain links does not exist!" && exit
+        for link in $(cat "$fileAddress"); do
+            videoName=$(youtube-dl --get-filename "$link")
+            youtube-dl --playlist-start 1 -i -R 99 --restrict-filenames -c -w "$link" -o - | tee -a "$videoName" | $mediaPlayer -
+        done
+    ;;
+
+    "vpn")
+        youtube-dl --playlist-start 1 -o  "%(title)s.%(ext)s"  --external-downloader "$downloadManager" --external-downloader-args "$downloadManagerArguments" "$videoLink"
+    ;;
+    
+    "tor")
+        $shellWrapper youtube-dl --playlist-start 1 -o  "%(title)s.%(ext)s"  --external-downloader "$downloadManager" --external-downloader-args "$downloadManagerArguments" "$videoLink"
+    ;;
+    
+    *)
+        echo "There's no such switch like $1"
+esac
+}
+
+if [[ -z $1 || $1 = @(-h|--help) ]]; then
+  usage
+  exit $(( $# ? 0 : 1 ))
+fi
+
+
+#Old way without getopts
+
+#if [[ ! -z $1 && $1 = @(-p) ]] &&  [[ ! -z $2 && $2 = @(-a) ]];  then
+#    echo "vpn enabled and download with playing video options detected"
+#    if [ ! -z $3 ];then
+#        fileName=$(youtube-dl --get-filename "$3")
+#        youtube-dl "$3" -o - | tee "$fileName" | $mediaPlayer - 1> /dev/null
+#    fi
+#    elif [[ ! -z $1 && $1 = @(-a) ]] &&  [[ ! -z $2 && $2 = @(-p) ]];  then
+#       echo "vpn enabled and download with playing video options detected"
+#       if [ ! -z $3 ];then
+#           fileName=$(youtube-dl --get-filename "$3")
+#           youtube-dl "$3" -o - | tee "$fileName" | $mediaPlayer - 1> /dev/null
+#       fi
+#    elif [[ ! -z $1 && $1 = @(-a) ]] ; then
+#        echo "vpn enabled option detected"
+#        if [[ ! -z $2 ]];then
+#            youtube-dl --playlist-start 1 -o  "%(title)s.%(ext)s"  --external-downloader "$downloadManager" --external-downloader-args "$downloadManagerArguments" "$2"
+#        fi
+#    elif [[ ! -z $1 && $1 = @(-p) ]];then
+#        echo "download and play option detected"
+#        checkSystemStatus
+#        if [[ ! -z $2 ]];then
+#            fileName=$(youtube-dl --get-filename "$2")
+#            $shellWrapper youtube-dl "$2" -o - | tee "$fileName" | $mediaPlayer - 1> /dev/null
+#        fi
+#    else
+#        checkSystemStatus
+#        $shellWrapper youtube-dl --playlist-start 1 -o   "%(title)s.%(ext)s"  --external-downloader $downloadManager --external-downloader-args "$downloadManagerArguments" "$1"
+#fi
+
+#New way with getopts
+
+while getopts a,p,i:,d: parameters; do
+    case $parameters in 
+        a)
+            antiFilter=1 
+        ;;
+
+        p)
+            playVideo=1
+        ;;
+        
+        i)
+            inputFile=1
+            fileAddress=$OPTARG
+        ;;
+        
+        d)
+            argumentDownloadDirectory=1
+            directoryPath=$OPTARG
+        ;;
+        
+        *)
+            echo "download with $shellWrapper"
+        ;;
+    esac
+done
+shift $((OPTIND-1))
+
+if [ ! $directoryPath = "$HOME/OnlineVideos" ]; then
+    downloadDirectory="$directoryPath"
+fi
+
+if [[ ! -z $antiFilter && ! -z $playVideo && ! -z $inputFile && ! -z $argumentDownloadDirectory ]]; then
+        checkDependency dir
+        downloaderCommand "vpn+inputFile+player" "$1"
+    elif [[ ! -z $antiFilter && ! -z $playVideo && ! -z $argumentDownloadDirectory ]]; then
+        checkDependency dir
+        downloaderCommand "vpn+player" "$1"
+    elif [[ ! -z $antiFilter && ! -z $inputFile && ! -z $argumentDownloadDirectory ]];then
+        checkDependency dir
+        downloaderCommand "vpn+inputFile" "$1"
+    elif [[ ! -z $playVideo && ! -z $inputFile && ! -z $argumentDownloadDirectory ]];then
+        checkDependency packages
+        checkSystemStatus "torStatus"
+        checkDependency dir
+        downloaderCommand "tor+inputFile+player" "$1"
+    elif [[ ! -z $antiFilter && ! -z $argumentDownloadDirectory ]]; then
+        checkDependency dir
+        downloaderCommand "vpn" "$1"
+    elif [[ ! -z $inputFile && ! -z $argumentDownloadDirectory ]]; then
+        checkDependency packages
+        checkSystemStatus "torStatus"
+        checkDependency dir
+        downloaderCommand "tor+inputFile" "$1"
+    elif [[ ! -z $playVideo && ! -z $argumentDownloadDirectory ]]; then
+        checkDependency packages
+        checkSystemStatus "torStatus"
+        checkDependency dir
+        downloaderCommand "tor+player" "$1"
+    elif [[ ! -z $antiFilter && ! -z $playVideo && ! -z $inputFile ]];then
+        checkDependency dir
+        downloaderCommand "vpn+inputFile+player" "$1"
+    elif [[ ! -z $antiFilter && ! -z $playVideo ]];then
+        checkDependency dir
+        downloaderCommand "vpn+player" "$1"
+    elif [[ ! -z $antiFilter && ! -z $inputFile ]];then
+        checkDependency dir
+        downloaderCommand "vpn+inputFile" "$1"
+    elif [[ ! -z $playVideo && ! -z $inputFile ]];then
+        checkDependency dir
+        downloaderCommand "inputFile+player" "$1"
+    elif [ ! -z $antiFilter ]; then
+        checkDependency dir
+        downloaderCommand "vpn" "$1"
+    elif [ ! -z $inputFile ]; then
+        checkDependency packages
+        checkDependency dir
+        checkSystemStatus "torStatus"
+        downloaderCommand "tor+inputFile" "$1"
+    elif [ ! -z $playVideo ]; then
+        checkDependency packages
+        checkDependency dir
+        checkSystemStatus "torStatus" 
+        downloaderCommand "tor+player" "$1"
+    else 
+        checkDependency dir
+        checkSystemStatus "torStatus"
+        downloaderCommand "tor" "$1"
+fi

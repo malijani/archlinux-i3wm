@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# This script downloads a random wallpaper from unsplash.it
+while [ 1 ];do
+    if [[ ! $( ping -c 3 8.8.8.8 ) ]];then
+        sleep 180
+    else
+       break
+    fi
+done
+mkdir -p ~/Wallpapers
+cd ~/Wallpapers
+img="unsplash-$(date +%y_%m_%d_%H_%M_%S).jpg"
+aria2c -c -x16 -s16 -j4 -k 1m -m10 'https://picsum.photos/1920/1080/?random&nature' -o $img
+#wget 'https://unsplash.it/1920/1080?random' -O $img
+#wget https://source.unsplash.com/random/1920x1080 -O $img
+#wget 'https://source.unsplash.com/1920x1080/?nature,water,mountain,sky,city,computer,night,dark,alone' -O $img
+img_md5=$(md5sum $img| cut -f1 -d" ")
+img_file="$img_md5.jpg"
+mv $img $img_file
+feh --bg-fill "file://$(pwd)/${img_file}"
+if [ $? != 0 ];then
+    notify-send "There was a problem in wallpaper download process.";
+    rm -f $img_file;
+    exit;
+   fi
+notify-send "Changed wallpaper; the new one is file://$(pwd)/${img_file}"
+

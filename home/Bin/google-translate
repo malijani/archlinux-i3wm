@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+## Requirements : xsel , xclip , mpv , wget , "INTERNET"
+## created by RezaSh13 with love
+
+#notify-send --icon=info "$(xsel -o)" "$(wget -U "Mozilla/5.0" -qO - "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=fa&dt=t&q=$(xsel -o | sed "s/[\"'<>]//g")" | sed "s/,,,0]],,.*//g" | awk -F'"' '{print $2, $6}')"
+
+####displays the translation in Zenity
+#text="$(xsel -o)"
+#translate="$(wget -U "Mozilla/5.0" -qO - "http://translate.googleapis.com/translate_a/single?#client=gtx&sl=auto&tl=fa&dt=t&q=$(echo $text | sed "s/[\"'<>]//g")" | sed "s/,,,0]],,.*//g" | awk -F'"' '{print $2, $6}')"
+#echo -e "Original text:" "$text"'\n' > /tmp/notitrans
+#echo "Translation:" "$translate" >> /tmp/notitrans
+#zenity --text-info --title="Translation" --filename=/tmp/notitrans
+####displays the translation and copy to clipboard
+[ ! -d $HOME/.google-translate ] && mkdir $HOME/.google-translate
+#[ ! -f $HOME/.google-translate/notify-sender ] && curl -s -o $HOME/.google-translate/notify-sender https://gitlab.com/virtualdemon/code-examples/raw/master/cprogramming/notifyserver/notify-sender && chmod +x $HOME/.google-translate/notify-sender
+text="$(xsel -o | sed -e 's/^[[:space:]]*//g')"
+[ ! -f $HOME/.google-translate/"${text}".mp3 ] && wget -q -U Mozilla "https://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&tl=en&q=$(echo "${text}")&textlen=4" -O $HOME/.google-translate/"${text}".mp3
+translate="$(wget -U "Mozilla/5.0" -qO - "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=fa&dt=t&q=$(echo "${text}"| sed "s/[\"'<>]//g")" | sed "s/,,,0]],,.*//g" | awk -F'"' '{print $2, $6}')"
+echo "$translate" | xclip -selection clipboard
+#$HOME/.google-translate/notify-sender 
+notify-send "$text" "$translate"| mpv --vo null $HOME/.google-translate/"$text.mp3" &>/dev/null 

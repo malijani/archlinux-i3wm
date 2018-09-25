@@ -1,0 +1,40 @@
+!!!!!!!!!!!!!!!!!!!!XTERM!!!!!!!!!!!!!!!!!!!!!!!
+xterm*font:xft:DeJavu Sans Mono:pixelsize:16
+xterm*saveLines: 100000
+xterm*charClass: 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48
+xterm*selectToClipboard: true
+xterm*termName: xterm-256color 
+xterm*eightBitInput: true
+xterm*locale: true
+xterm*utf8: true 
+xterm*altIsNotMeta: true
+xterm*metaSendsEscape: true
+! Global colorscheme
+! special
+*.foreground:   #ffffff
+*.background:   #000000
+*.cursorColor:  #ffffff
+! black
+*.color0:       #252525
+*.color8:       #454545
+! red
+*.color1:       #ff9f95
+*.color9:       #ff8d80
+! green
+*.color2:       #a6e22e
+*.color10:      #b6e354
+! yellow
+*.color3:       #fd971f
+*.color11:      #fd971f
+! blue
+*.color4:       #435e87
+*.color12:      #587aa4
+! magenta
+*.color5:       #789ec6
+*.color13:      #46a4ff
+! cyan
+*.color6:       #5e7175
+*.color14:      #a3babf
+! white
+*.color7:       #dbdcdc
+*.color15:      #fdfdfd

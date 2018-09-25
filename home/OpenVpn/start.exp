@@ -1,0 +1,20 @@
+#!/usr/bin/expect -f
+
+#Create constants for US.ovpn
+set confPath "OpenVPN/US.ovpn"
+set user "rjufUA"
+set pass "mktNA2"
+
+#Create constants for DE.ovpn
+#set confPath "OpenVPN/DE.ovpn"
+#set user "rjufUA"
+#set pass "mktNA2"
+
+spawn sudo openvpn $confPath 
+expect "Enter Auth Username:" {
+    send "$user\n"
+}
+expect "Enter Auth Password:" {
+    send "$pass\n"
+}
+interact

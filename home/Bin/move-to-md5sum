@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+cd $(pwd)
+ls > filesUniq
+while IFS= read -r file; do 
+	fileHash=$(md5sum "$file" | cut -f1 -d" ")
+	fileExtension="${file#*.}"
+	echo "Moving $file ==> $fileHash"
+	mv ./"$file" ./"$fileHash"."$fileExtension"
+done < filesUniq
+rm *.filesUniq

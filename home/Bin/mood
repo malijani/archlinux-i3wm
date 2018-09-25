@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+case $1 in 
+    "php-start")
+        sudo systemctl start httpd.service mysqld.service
+    ;;
+    "php-stop")
+        sudo systemctl stop httpd.service mysqld.service
+    ;;
+    *)
+        echo "There's no switch like $1"
+    ;;
+esac

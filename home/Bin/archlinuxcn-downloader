@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+if [ -e "archlinuxcnSource" ]; then
+	packageName=$(cat archlinuxcnSource | sed 's/<\/\?[^>]\+>//g' | grep $1 | awk '{ print $1 }' | head -1)
+else
+	curl -s -o archlinuxcnSource http://repo.archlinuxcn.org/x86_64/
+	packageName=$(cat archlinuxcnSource | sed 's/<\/\?[^>]\+>//g' | grep $1 | awk '{ print $1 }' | head -1)
+fi
+wget http://repo.archlinuxcn.org/x86_64/$packageName

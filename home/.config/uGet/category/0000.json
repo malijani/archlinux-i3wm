@@ -1,0 +1,104 @@
+{
+	"data": {
+		"relation": {
+			"group": 0,
+			"task": {
+				"priority": 1
+			}
+		},
+		"category": {
+			"hosts": [
+				".edu",
+				".idv"
+			],
+			"schemes": [
+				"ftps",
+				"magnet"
+			],
+			"file-exts": [
+				"torrent",
+				"metalink"
+			],
+			"active-limit": 3,
+			"finished-limit": 300,
+			"recycled-limit": 300
+		},
+		"common": {
+			"name": "New 0",
+			"folder": "\/home\/virtualdemon",
+			"connect-timeout": 15,
+			"transmit-timeout": 30,
+			"retry-delay": 6,
+			"retry-limit": 99,
+			"retry-count": 0,
+			"max-connections": 1,
+			"max-upload-speed": 0,
+			"max-download-speed": 0,
+			"timestamp": 1
+		}
+	},
+	"children": [
+		{
+			"data": {
+				"relation": {
+					"group": 72,
+					"task": {
+						"plugin-name": "curl",
+						"priority": 1
+					}
+				},
+				"progress": {
+					"complete": 1452390386,
+					"total": 1452390386,
+					"elapsed": 3957,
+					"uploaded": 0,
+					"percent": 100
+				},
+				"log": {
+					"added-time": 1537717245,
+					"completed-time": 1537729367,
+					"messages": [
+					]
+				},
+				"http": {
+					"referrer": "http:\/\/mydiba.net\/tt1375666\/",
+					"cookie-file": "\/home\/virtualdemon\/.config\/uGet\/attachment\/1DA5A408.cookie",
+					"redirection-limit": 30
+				},
+				"proxy": {
+					"port": 80,
+					"type": 0
+				},
+				"common": {
+					"name": "Inception.2010.720p.DibaMoviez.mkv",
+					"uri": "http:\/\/dl6.dlsdm.ir\/Movie\/Foreign\/1397\/06\/Inception.2010.720p.DibaMoviez.mkv",
+					"file": "Inception.2010.720p.DibaMoviez.mkv",
+					"folder": "\/home\/virtualdemon",
+					"connect-timeout": 15,
+					"transmit-timeout": 30,
+					"retry-delay": 6,
+					"retry-limit": 99,
+					"retry-count": 0,
+					"max-connections": 1,
+					"max-upload-speed": 0,
+					"max-download-speed": 0,
+					"timestamp": 1
+				},
+				"files": {
+					"collection": [
+						{
+							"path": "\/home\/virtualdemon\/Inception.2010.720p.DibaMoviez.mkv",
+							"type": 0,
+							"state": 8,
+							"total": 0,
+							"complete": 0
+						}
+					]
+				}
+			},
+			"children": [
+			]
+		}
+	]
+}
+

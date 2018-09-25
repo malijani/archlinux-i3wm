@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+sourcePath=$1
+destinationPath=$2
+sourceCount=$(ls $sourcePath| wc -l)
+counter=0
+for file in $(ls $sourcePath); do
+    [ -f $sourcePath$file ] && cp -v $sourcePath$file $destinationPath
+    [ -d $sourcePath$file ] && cp -r $sourcePath$file $destinationPath && echo "$sourcePath$file -> $destinationPath"
+    ((counter++))
+    statusProg=$(expr $counter \* 100 / $sourceCount )
+    fileSizeKB=$(du -s $sourcePath$file | awk '{print $1}')
+    fileSizeMB=$(expr $fileSizeKB / 1024)
+    movedSizeMB=$(expr $movedSizeMB + $fileSizeMB)
+    printf "\033c"
+    echo "Status : $statusProg"%
+    echo "Moved size : $movedSizeMB"MB
+    [[ $statusProg -le 10 ]] && echo -e "#---------"
+    [[ $statusProg -gt 10 && $statusProg -le 20 ]] && echo -e "##--------"
+    [[ $statusProg -gt 20 && $statusProg -le 30 ]] && echo -e "###-------"
+    [[ $statusProg -gt 30 && $statusProg -le 40 ]] && echo -e "####------"
+    [[ $statusProg -gt 40 && $statusProg -le 50 ]] && echo -e "#####-----"
+    [[ $statusProg -gt 50 && $statusProg -le 60 ]] && echo -e "######----"
+    [[ $statusProg -gt 60 && $statusProg -le 70 ]] && echo -e "#######---"
+    [[ $statusProg -gt 70 && $statusProg -le 80 ]] && echo -e "########--"
+    [[ $statusProg -gt 80 && $statusProg -le 90 ]] && echo -e "#########-"
+    [[ $statusProg -gt 90 && $statusProg -le 100 ]] && echo -e "##########"
+done
+
