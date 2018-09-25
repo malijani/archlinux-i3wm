@@ -259,6 +259,12 @@ xrdb -load $HOME/.Xresources
 fc-cache -fv
 sudo fc-cache -fv
 
+#Create /etc/motd file
+echo "Configuring /etc/motd file:"
+sudo cp /etc/motd /etc/motd.bak
+neofetch -L > motd
+neofetch --gap -0 | egrep "CPU|GPU" >> motd
+
 #Configure touchpad in config
 DEVICE=$(xinput list | grep Touchpad | awk '{print $3" "$4" "$5}')
 sed -i "s/FTE1200:00 0B05:0201 Touchpad/$DEVICE/g" $HOME/.config/i3/config
@@ -267,3 +273,4 @@ sed -i "s/FTE1200:00 0B05:0201 Touchpad/$DEVICE/g" $HOME/.config/i3/config
 if [ ! -z "$(ps aux | grep i3 | grep "i3$")" ] ;then
        	i3-msg restart
 fi
+
