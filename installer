@@ -99,7 +99,7 @@ read -p "Do you want to add pacman.conf (contains archlinuxcn repository) ?[y/N]
 if [ "$PACMANCONF_ADD_ANS" == "y" ] || [ "$PACMANCONF_ADD_ANS" == "Y" ]; then
 	ech "Adding to /etc/pacman.conf"
 	sudo mv /etc/pacman.conf /etc/pacman.conf-ORIG
-	sudo curl -s -o /etc/pacman.conf https://gitlab.com/virtualdemon/archlinux-configuration/raw/master/etc/pacman.conf
+	sudo curl -s -o /etc/pacman.conf https://githubusercontent.com/virtualdemon/archlinux-i3wm/old-untested/etc/pacman.conf
 	sudo pacman -Syu archlinuxcn-keyring xdelta3
 	sudo pacman-key --populate archlinuxcn
 fi
@@ -125,7 +125,7 @@ if [ "$INST_TOR" == "y" ] || [ "$INST_TOR" == "Y" ];then
 	sudo pacman -U obfs4proxy*.tar.xz --needed --noconfirm
 	echo "downloading torrc"
 	sudo mv /etc/tor/torrc /etc/tor/torrc-ORIG
-	sudo curl -s -o /etc/tor/torrc https://gitlab.com/virtualdemon/archlinux-configuration/raw/master/etc/tor/torrc
+	sudo curl -s -o /etc/tor/torrc https://githubusercontent.com/virtualdemon/archlinux-i3wm/old-untested/etc/tor/torrc
 	echo "making log file and changing permissions"
 	sudo mkdir /var/log/tor
 	sudo touch /var/log/tor/log
@@ -151,9 +151,9 @@ read -p "Do you want to install LightDM (a light weight display manager)? [y/N] 
 
 #Add lightdm-gtk-greeter config if exist
 if [ ! -z $(pacman -Qq lightdm-gtk-greeter) ];then
-	sudo curl -s -o /etc/lightdm/lightdm-gtk-greeter.conf https://gitlab.com/virtualdemon/archlinux-configuration/raw/master/etc/lightdm/lightdm-gtk-greeter.conf
+	sudo curl -s -o /etc/lightdm/lightdm-gtk-greeter.conf https://githubusercontent.com/virtualdemon/archlinux-i3wm/old-untested/etc/lightdm/lightdm-gtk-greeter.conf
 	sudo mkdir -p /usr/share/lightdm-background
-	sudo curl -s -o /usr/share/lightdm-background/08303b0034dec9b5a48e98c305464edd.JPEG https://gitlab.com/virtualdemon/archlinux-configuration/raw/master/backgrounds/08303b0034dec9b5a48e98c305464edd.JPEG
+	sudo curl -s -o /usr/share/lightdm-background/08303b0034dec9b5a48e98c305464edd.JPEG https://githubusercontent.com/virtualdemon/archlinux-i3wm/old-untested/backgrounds/08303b0034dec9b5a48e98c305464edd.JPEG
 fi
 
 #Enable NetworkManager service
@@ -214,7 +214,7 @@ fi
 clear
 for BLOCKLET in ${BLOCKLETS[@]} ;do
 	echo "Adding $BLOCKLET"
-	curl -s -o $HOME/.config/i3/blocklets/$BLOCKLET https://gitlab.com/virtualdemon/archlinux-configuration/raw/master/i3-config-files/blocklets/$BLOCKLET
+	curl -s -o $HOME/.config/i3/blocklets/$BLOCKLET https://githubusercontent.com/virtualdemon/archlinux-i3wm/old-untested/i3-config-files/blocklets/$BLOCKLET
 done
 
 #Make i3blocks blocklets executable
@@ -223,7 +223,7 @@ chmod +x $HOME/.config/i3/blocklets/*
 clear
 for BIN_SCRIPT in ${BIN_SCRIPTS[@]}; do
 	echo "Adding $BIN_SCRIPT"
-	curl -s -o $HOME/bin/$BIN_SCRIPT https://gitlab.com/virtualdemon/archlinux-configuration/raw/master/bin/$BIN_SCRIPT
+	curl -s -o $HOME/bin/$BIN_SCRIPT https://githubusercontent.com/virtualdemon/archlinux-i3wm/old-untested/bin/$BIN_SCRIPT
 done
 
 #Make ~/Bin scripts executable
@@ -232,24 +232,24 @@ chmod +x $HOME/bin/*
 clear
 for I3_CONFIG in ${I3_CONFIGS[@]};do
 	echo "Adding $I3_CONFIG"
-	curl -s -o $HOME/.config/i3/$I3_CONFIG https://gitlab.com/virtualdemon/archlinux-configuration/raw/master/i3-config-files/$I3_CONFIG
+	curl -s -o $HOME/.config/i3/$I3_CONFIG https://githubusercontent.com/virtualdemon/archlinux-i3wm/old-untested/i3-config-files/$I3_CONFIG
 done
 
 clear
 for HOME_DOTFILE in ${HOME_DOTFILES[@]};do
 	echo "Adding $HOME_DOTFILE"
-	curl -s -o $HOME/.$HOME_DOTFILE https://gitlab.com/virtualdemon/archlinux-configuration/raw/master/dotfiles/$HOME_DOTFILE
+	curl -s -o $HOME/.$HOME_DOTFILE https://githubusercontent.com/virtualdemon/archlinux-i3wm/old-untested/dotfiles/$HOME_DOTFILE
 done
 
 clear
 for DOTFILE in ${DOTFILES[@]}; do
 	echo "Adding $DOTFILE"
-	curl -s -o $HOME/.config/$DOTFILE https://gitlab.com/virtualdemon/archlinux-configuration/raw/master/dotfiles/$DOTFILE
+	curl -s -o $HOME/.config/$DOTFILE https://githubusercontent.com/virtualdemon/archlinux-i3wm/old-untested/dotfiles/$DOTFILE
 done
 
 for FONT in ${FONTS[@]}; do
 	echo "Adding $FONT"
-	curl -s -o $HOME/.fonts/$FONT https://gitlab.com/virtualdemon/archlinux-configuration/raw/master/fonts/$FONT
+	curl -s -o $HOME/.fonts/$FONT https://githubusercontent.com/virtualdemon/archlinux-i3wm/old-untested/fonts/$FONT
 done
 
 #Load xresources file
